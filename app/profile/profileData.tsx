@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useProfile, updateProfile } from "./profileHelperFunctions";
 
 export default function Profile() {
-  const { email, username, setUsername, error, setError, supabase, loading } =
+  const { email, username, error, setError, supabase, loading } =
     useProfile();
   const [success, setSuccess] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
@@ -40,7 +40,7 @@ export default function Profile() {
           />
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <label htmlFor="username" className="text-sm font-medium text-gray-700">
             Username
           </label>
@@ -51,13 +51,14 @@ export default function Profile() {
             onChange={(e) => setUsername(e.target.value)}
             className="w-full"
           />
-        </div>
+        </div> */}
 
-        {error && (
+        {error ? (
           <Alert variant="destructive" className="w-full">
-            <span className="font-semibold">Error:</span> {error}
+            <span className="font-semibold">Error:</span> 
+            <span className="ml-12">{error}</span>
           </Alert>
-        )}
+        ):<></>}
 
         {success && (
           <Alert variant="default" className="w-full">

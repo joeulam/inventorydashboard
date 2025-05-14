@@ -27,17 +27,8 @@ export function useProfile() {
 
       setUser(user);
       console.log(user)
-      const { data, error } = await supabase
-        .from("users")
-        .select("username")
-        .eq("id", user.id)
-        .single();
 
-      if (error) setError(error.message);
-      else {
-        setEmail(user.email || "");
-        setUsername(data.username || "");
-      }
+      setEmail(user.email || "");
       setLoading(false);
     };
 
