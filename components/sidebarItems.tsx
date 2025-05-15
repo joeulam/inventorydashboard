@@ -1,17 +1,8 @@
 export const sideBarItems = [
   {
     label: "Dashboard",
-    children:[
-      {
-        label: "Dashboard",
-        href: "/dashboard",
-      },
-      { label: "Store entry", 
-        href: "/entries" 
-      },
-    ]
+    href: "/dashboard",
   },
-
   {
     type: "divider",
   },
@@ -34,6 +25,7 @@ export const sideBarItems = [
       { label: "Order", href: "/order" },
       { label: "Order History", href: "/orderHistory" },
       { label: "Supplier", href: "/supplier" },
+      { label: "Store entry", href: "/entries" },
     ],
   },
   {
