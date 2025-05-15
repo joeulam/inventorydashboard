@@ -10,9 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { InventoryItem } from "@/utils/datatypes";
-import { addToCart } from "@/utils/suprabaseInventoryFunctions";
 
-export function getColumns(
+export function getColumnsOrder(
   onEdit: (id: string) => void,
   onDelete: (id: string) => void,
 ): ColumnDef<InventoryItem>[] {
@@ -22,7 +21,7 @@ export function getColumns(
       header: "Id",
     },
     {
-      accessorKey: "name",
+      accessorKey: "item_name",
       header: "Name",
     },
     {
@@ -30,15 +29,11 @@ export function getColumns(
       header: "Supplier",
     },
     {
-      accessorKey: "sellingCost",
-      header: "Selling Cost",
-    },
-    {
       accessorKey: "buyingCost",
       header: "Buying Cost",
     },
     {
-      accessorKey: "amount",
+      accessorKey: "quantity",
       header: "Quantity",
     },
     {
@@ -60,11 +55,6 @@ export function getColumns(
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onDelete(item.id)}>
                 Delete
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => addToCart(item.id, 1)}
-              >
-                Add to Order
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

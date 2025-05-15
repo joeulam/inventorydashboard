@@ -1,8 +1,17 @@
 export const sideBarItems = [
   {
     label: "Dashboard",
-    href: "/dashboard",
+    children:[
+      {
+        label: "Dashboard",
+        href: "/dashboard",
+      },
+      { label: "Store entry", 
+        href: "/entries" 
+      },
+    ]
   },
+
   {
     type: "divider",
   },
@@ -13,7 +22,6 @@ export const sideBarItems = [
       { label: "Order Statistics", href: "/dashboard/order-statistics" },
       { label: "Sales Overview", href: "/dashboard/sales" },
       { label: "Supplier Metrics", href: "/dashboard/supplier-metrics" },
-      { label: "Returns & Refunds", href: "/dashboard/refunds" },
     ],
   },
   {
@@ -24,7 +32,7 @@ export const sideBarItems = [
     children: [
       { label: "Inventory", href: "/inventory" },
       { label: "Order", href: "/order" },
-      { label: "Order History", href: "/order-history" },
+      { label: "Order History", href: "/orderHistory" },
       { label: "Supplier", href: "/supplier" },
     ],
   },

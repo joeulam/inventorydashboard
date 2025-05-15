@@ -43,8 +43,6 @@ export function AddNewInventoryCard({
     defaultValues: {
       name: "",
       buyingCost: 0,
-      sellingCost: 0,
-      supplier: "",
       amount: 0,
     },
   });
@@ -56,8 +54,6 @@ export function AddNewInventoryCard({
       form.reset({
         name: itemToEdit.name,
         buyingCost: itemToEdit.buyingCost,
-        sellingCost: itemToEdit.sellingCost,
-        supplier: itemToEdit.supplier,
         amount: itemToEdit.amount,
       });
       setOpen(true);
@@ -99,9 +95,6 @@ export function AddNewInventoryCard({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="cursor-pointer" variant="outline">
-          Add new item
-        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -120,20 +113,7 @@ export function AddNewInventoryCard({
                 <FormItem>
                   <FormLabel>Item Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Item name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="sellingCost"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Selling Cost</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="0" {...field} />
+                    <Input disabled placeholder="Item name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -147,19 +127,6 @@ export function AddNewInventoryCard({
                   <FormLabel>Buying Cost</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="supplier"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Supplier</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Supplier name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

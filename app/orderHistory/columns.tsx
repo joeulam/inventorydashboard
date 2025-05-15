@@ -30,16 +30,12 @@ export function getColumns(
       header: "Supplier",
     },
     {
-      accessorKey: "sellingCost",
-      header: "Selling Cost",
-    },
-    {
-      accessorKey: "buyingCost",
-      header: "Buying Cost",
+      accessorKey: "cost",
+      header: "Cost",
     },
     {
       accessorKey: "amount",
-      header: "Quantity",
+      header: "Amount",
     },
     {
       id: "actions",
