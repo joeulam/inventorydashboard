@@ -16,7 +16,9 @@ export function Sidebar() {
         <nav className="space-y-6">
           {sideBarItems.map((group, index) => {
             if (group.type === "divider") {
-              return <div key={`divider-${index}`} className="h-px bg-muted my-4" />;
+              return (
+                <div key={`divider-${index}`} className="h-px bg-muted my-4" />
+              );
             }
 
             return (
