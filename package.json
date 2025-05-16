@@ -25,6 +25,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
+    "react-qr-barcode-scanner": "^2.1.2",
     "recharts": "^2.15.3",
     "tailwind-merge": "^3.3.0",
     "zod": "^3.24.4"

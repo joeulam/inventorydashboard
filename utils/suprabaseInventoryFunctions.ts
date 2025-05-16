@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { InventoryItem } from "./datatypes";
+import { InventoryItem, OrderDataType } from "./datatypes";
 
 
 export async function getInventory(): Promise<InventoryItem[]> {
@@ -104,3 +104,38 @@ export async function getOrderHistory() {
   return data || [];
 }
 
+export async function getTotalInventory() {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("cart")
+    .select("*")
+    .order("added_at", { ascending: false });
+
+  if (error) {
+    console.error("Fetch current order error:", error.message);
+    return 0.00;
+  }
+  let totalCost = 0
+  data.map((item: OrderDataType) => {
+    totalCost += item.quantity * item.buyingCost
+  })
+  return totalCost || 0.00;
+}
+
+export async function getTotalQuantity() {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("cart")
+    .select("*")
+    .order("added_at", { ascending: false });
+
+  if (error) {
+    console.error("Fetch current order error:", error.message);
+    return 0;
+  }
+  let totalQuantity = 0
+  data.map((item: OrderDataType) => {
+    totalQuantity += item.quantity
+  })
+  return totalQuantity || 0;
+}

@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 import { createClient } from "@/utils/supabase/client";
 import { InventoryItem } from "@/utils/datatypes";
 import { updateItem } from "@/utils/suprabaseInventoryFunctions";
+import BarcodeScanner from "react-qr-barcode-scanner";
+import barcodeAPI from "@/utils/barcode";
 
 type AddNewInventoryCardProps = {
   onAdd?: () => void;
@@ -32,12 +34,13 @@ type AddNewInventoryCardProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-
 export function AddNewInventoryCard({
   onAdd,
   itemToEdit,
 }: AddNewInventoryCardProps) {
   const [open, setOpen] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
+  const [data, setData] = useState("Not Found");
 
   const form = useForm<Partial<InventoryItem>>({
     defaultValues: {
@@ -46,6 +49,7 @@ export function AddNewInventoryCard({
       sellingCost: 0,
       supplier: "",
       amount: 0,
+      barcode: "",
     },
   });
 
@@ -59,6 +63,7 @@ export function AddNewInventoryCard({
         sellingCost: itemToEdit.sellingCost,
         supplier: itemToEdit.supplier,
         amount: itemToEdit.amount,
+        barcode: itemToEdit.barcode
       });
       setOpen(true);
     } else {
@@ -178,7 +183,70 @@ export function AddNewInventoryCard({
                 </FormItem>
               )}
             />
-            <DialogFooter>
+            <FormField
+              control={form.control}
+              name="barcode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Barcode</FormLabel>
+                  <FormControl>
+                    <Input type="string" placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter className="flex flex-col space-y-2 items-start">
+              {!showScanner ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setShowScanner(true)}
+                >
+                  Add via barcode
+                </Button>
+              ) : (
+                <div className="w-full space-y-2">
+                  <BarcodeScanner
+                    width={300}
+                    height={300}
+                    
+                    onUpdate={async (err, result) => {
+                      if (result) {
+                        const scannedCode = result.getText();
+                        setData(scannedCode);
+                        form.setValue("barcode", scannedCode);
+                        setShowScanner(false);
+                    
+                        try {
+                          const response = await barcodeAPI(scannedCode);                    
+                          const item = response.items?.[0];
+                          if (item) {
+                            form.setValue("name", item.title || "");
+                            form.setValue("supplier", item.brand || "");
+                          }
+                        } catch (error) {
+                          console.error("Barcode lookup failed", error);
+                        }
+                      } else {
+                        setData("Not Found");
+                      }
+                    }}
+                    
+                  />
+                  <p className="font-bold text-sm">Scanned: {data}</p>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowScanner(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
+
               <Button type="submit">
                 {itemToEdit ? "Update Item" : "Add to Inventory"}
               </Button>
