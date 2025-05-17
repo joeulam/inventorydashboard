@@ -15,7 +15,6 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile Top-Left Toggle Button */}
       <div className="fixed top-4 left-4 z-50 md:hidden">
         <Button
           size="icon"
@@ -27,7 +26,6 @@ export function Sidebar() {
         </Button>
       </div>
 
-      {/* Sidebar (slide in on mobile, always visible on desktop) */}
       <aside
         className={cn(
           "fixed z-40 top-0 left-0 h-full w-60 bg-background border-r text-foreground transform transition-transform duration-300 ease-in-out",
@@ -35,7 +33,6 @@ export function Sidebar() {
           "md:translate-x-0 md:relative md:block"
         )}
       >
-        {/* Close button (mobile only) */}
         <div className="flex items-center justify-between p-4 md:hidden border-b">
           <div className="text-lg font-semibold">Lam Mark Trading</div>
           <Button
@@ -47,7 +44,6 @@ export function Sidebar() {
           </Button>
         </div>
 
-        {/* Title (desktop only) */}
         <div className="p-4 text-lg font-semibold border-b hidden md:block">
           Lam Mark Trading
         </div>
@@ -74,7 +70,7 @@ export function Sidebar() {
                       <li key={item.href}>
                         <Link
                           href={item.href}
-                          onClick={() => setIsOpen(false)} // auto close on click
+                          onClick={() => setIsOpen(false)} 
                           className={cn(
                             "block px-3 py-2 rounded-md text-sm font-medium transition-colors",
                             pathname === item.href

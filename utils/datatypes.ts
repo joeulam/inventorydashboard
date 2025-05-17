@@ -8,6 +8,7 @@ export type InventoryItem = {
   created_at: string;
   user_id: string;
   barcode: string
+  image: string
 };
 
 export type OrderDataType = {
