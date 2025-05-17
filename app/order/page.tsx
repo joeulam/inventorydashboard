@@ -4,12 +4,17 @@ import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 import "../globals.css";
 import { DataTable } from "./currentCartTable";
-import { deleteItem, getCurrentOrder, getItemById } from "../../utils/suprabaseInventoryFunctions";
+import {
+  deleteItem,
+  getCurrentOrder,
+  getItemById,
+  getTotalInventory,
+  getTotalQuantity,
+} from "../../utils/suprabaseInventoryFunctions";
 import { getColumnsOrder } from "./orderColumns";
 import { InventoryItem, OrderDataType } from "@/utils/datatypes";
 import { AddNewInventoryCard } from "../orderHistory/popupOrderModal";
-
-
+import { Button } from "@/components/ui/button";
 
 export default function Order() {
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -17,6 +22,8 @@ export default function Order() {
 
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [total, setTotal] = useState(0.0);
+  const [quantity, setQuantity] = useState(0);
 
   const fetchOrder = async () => {
     setLoading(true);
@@ -30,7 +37,10 @@ export default function Order() {
         };
       })
     );
-    
+    const totalCost = await getTotalInventory();
+    const totalQuantity = await getTotalQuantity();
+    setQuantity(totalQuantity)
+    setTotal(totalCost);
     setItems(data);
     setLoading(false);
   };
@@ -39,6 +49,10 @@ export default function Order() {
     const error = await deleteItem(id, "cart");
     if (!error) {
       setItems((prev) => prev.filter((item) => item.id !== id));
+      const totalCost = await getTotalInventory();
+      const totalQuantity = await getTotalQuantity();
+      setQuantity(totalQuantity)
+      setTotal(totalCost);
     } else {
       console.error("Delete failed:", error.message);
     }
@@ -77,7 +91,19 @@ export default function Order() {
           {loading ? (
             <>loading...</>
           ) : (
-            <DataTable columns={getColumnsOrder(handleEdit, handleDelete,)} data={items} />
+            <>
+              <DataTable
+                columns={getColumnsOrder(handleEdit, handleDelete)}
+                data={items}
+              />
+
+              <div className="flex flex-col justify-end mt-4">
+                <h1 className="mt-5 font-bold text-right mr-10">Quantity: {quantity}</h1>
+                <h1 className="mt-5 font-bold text-right mr-10">Total: {total}</h1>
+                <Button className="mt-5">Submit</Button>
+              </div>
+
+            </>
           )}
         </div>
       </main>

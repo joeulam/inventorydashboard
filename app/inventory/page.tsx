@@ -5,9 +5,14 @@ import { Sidebar } from "@/components/sidebar";
 import "../globals.css";
 import { DataTable } from "./inventoryTable";
 import { AddNewInventoryCard } from "./popupModal";
-import { deleteItem, getInventory, getItemById } from "../../utils/suprabaseInventoryFunctions";
+import {
+  deleteItem,
+  getInventory,
+  getItemById,
+} from "../../utils/suprabaseInventoryFunctions";
 import { getColumns } from "./columns";
 import { InventoryItem } from "@/utils/datatypes";
+import { useRouter } from "next/navigation";
 
 export default function Inventory() {
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -43,6 +48,7 @@ export default function Inventory() {
   useEffect(() => {
     fetchInventory();
   }, []);
+  const router = useRouter();
 
   return (
     <div className="flex h-screen">
@@ -65,7 +71,10 @@ export default function Inventory() {
           {loading ? (
             <>loading...</>
           ) : (
-            <DataTable columns={getColumns(handleEdit, handleDelete,)} data={items} />
+            <DataTable
+              columns={getColumns(handleEdit, handleDelete, router)}
+              data={items}
+            />
           )}
         </div>
       </main>

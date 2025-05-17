@@ -11,11 +11,14 @@ import {
 import { MoreVertical } from "lucide-react";
 import { InventoryItem } from "@/utils/datatypes";
 import { addToCart } from "@/utils/suprabaseInventoryFunctions";
+import { useRouter } from "next/navigation";
 
 export function getColumns(
   onEdit: (id: string) => void,
   onDelete: (id: string) => void,
+  router: ReturnType<typeof useRouter>
 ): ColumnDef<InventoryItem>[] {
+
   return [
     {
       accessorKey: "id",
@@ -46,28 +49,32 @@ export function getColumns(
       header: "",
       cell: ({ row }) => {
         const item = row.original;
-
+        
         return (
+
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(item.id)}>
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(item.id)}>
-                Delete
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => addToCart(item.id, 1)}
-              >
-                Add to Order
-              </DropdownMenuItem>
-            </DropdownMenuContent>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(item.id)}>
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onDelete(item.id)}>
+                  Delete
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => addToCart(item.id, 1)}>
+                  Add to Order
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={ () => router.push(`../inventory/${row._getAllVisibleCells()[0].getContext().getValue()}`)}
+                >
+                  More Detail
+                </DropdownMenuItem>
+              </DropdownMenuContent>
           </DropdownMenu>
+
         );
       },
     },
