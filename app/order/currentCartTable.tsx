@@ -15,21 +15,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
+import { useEffect, useState } from "react";
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  onRowSelectionChange?: (selectedIds: string[]) => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
+  onRowSelectionChange,
 }: DataTableProps<TData, TValue>) {
+  const [rowSelection, setRowSelection] = useState({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
+    getRowId: (row) => row.id,
+    state: { rowSelection },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+  });
+  useEffect(() => {
+    const selectedRows = table.getSelectedRowModel().rows;
+    const selectedIds = selectedRows.map((row) => row.original.id);
+    onRowSelectionChange?.(selectedIds);
+  }, [rowSelection]);
+  
+  
 
   return (
     <div className="rounded-md border">
@@ -37,23 +52,17 @@ export function DataTable<TData, TValue>({
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                )
-              })}
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -68,7 +77,7 @@ export function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className="text-center h-24">
                 No results.
               </TableCell>
             </TableRow>
@@ -76,5 +85,5 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

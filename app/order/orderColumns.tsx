@@ -8,14 +8,35 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
 import { MoreVertical } from "lucide-react";
 import { InventoryItem } from "@/utils/datatypes";
 
 export function getColumnsOrder(
   onEdit: (id: string) => void,
   onDelete: (id: string) => void,
+  onMove: (id: string) => void
 ): ColumnDef<InventoryItem>[] {
   return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     {
       accessorKey: "id",
       header: "Id",
@@ -33,15 +54,14 @@ export function getColumnsOrder(
       header: "Buying Cost",
     },
     {
-      accessorKey: "quantity",
-      header: "Quantity",
+      accessorKey: "amount",
+      header: "Amount",
     },
     {
       id: "actions",
       header: "",
       cell: ({ row }) => {
         const item = row.original;
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -50,6 +70,9 @@ export function getColumnsOrder(
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onMove(item.id)}>
+                Move to current order
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onEdit(item.id)}>
                 Edit
               </DropdownMenuItem>

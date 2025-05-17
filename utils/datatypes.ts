@@ -16,7 +16,10 @@ export type OrderDataType = {
   user_id: string;
   item_id: string;
   item_name: string;
-  quantity: number;
+  amount: number;
   buyingCost: number;
   added_at: string;
+  status: string
 }
+
+
