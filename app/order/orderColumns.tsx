@@ -38,10 +38,6 @@ export function getColumnsOrder(
       enableHiding: false,
     },
     {
-      accessorKey: "id",
-      header: "Id",
-    },
-    {
       accessorKey: "item_name",
       header: "Name",
     },

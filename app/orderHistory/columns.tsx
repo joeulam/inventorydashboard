@@ -10,32 +10,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { InventoryItem } from "@/utils/datatypes";
-import { addToCart } from "@/utils/suprabaseInventoryFunctions";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export function getColumns(
   onEdit: (id: string) => void,
   onDelete: (id: string) => void,
+  router: (AppRouterInstance)
 ): ColumnDef<InventoryItem>[] {
   return [
     {
-      accessorKey: "id",
-      header: "Id",
+      accessorKey: "created_at",
+      header: "Date",
     },
     {
-      accessorKey: "name",
-      header: "Name",
-    },
-    {
-      accessorKey: "supplier",
-      header: "Supplier",
-    },
-    {
-      accessorKey: "cost",
+      accessorKey: "total",
       header: "Cost",
-    },
-    {
-      accessorKey: "amount",
-      header: "Amount",
     },
     {
       id: "actions",
@@ -51,16 +40,13 @@ export function getColumns(
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(item.id)}>
-                Edit
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onDelete(item.id)}>
                 Delete
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => addToCart(item.id, 1)}
+                onClick={() => router.push(`/orderHistory/${item.id}`)}
               >
-                Add to Order
+                View order
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

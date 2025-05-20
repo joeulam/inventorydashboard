@@ -15,12 +15,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import HistoricalPrice from "@/components/historicalPriceChart";
 
 export default function Inventory() {
   const [item, setItem] = useState<InventoryItem>();
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [chartRefreshKey, setChartRefreshKey] = useState(0); // NEW
   const slug = useParams();
   const router = useRouter();
 
@@ -46,7 +48,10 @@ export default function Inventory() {
   const handleSave = async () => {
     if (!item || !item.id) return;
     const error = await updateItem(item.id, item);
-    if (!error) setIsEditing(false);
+    if (!error) {
+      setIsEditing(false);
+      setChartRefreshKey((prev) => prev + 1); // TRIGGER chart update
+    }
   };
 
   useEffect(() => {
@@ -62,9 +67,13 @@ export default function Inventory() {
       <Sidebar />
       <main className="flex-1 overflow-y-auto bg-gray-50 py-10 px-6">
         <div className="max-w-3xl mx-auto">
-          <Card className="rounded-2xl shadow-xl p-6 space-y-6">
+        <HistoricalPrice id={slug.slug!.toString()} refreshTrigger={chartRefreshKey} />
+
+          <Card className="rounded-2xl shadow-xl p-6 space-y-6 mt-5">
             {loading ? (
-              <p className="text-center text-muted-foreground">Loading item...</p>
+              <p className="text-center text-muted-foreground">
+                Loading item...
+              </p>
             ) : (
               <>
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -84,7 +93,9 @@ export default function Inventory() {
 
                   <div className="flex-1 space-y-4">
                     <div>
-                      <span className="text-sm text-muted-foreground block">Item Name</span>
+                      <span className="text-sm text-muted-foreground block">
+                        Item Name
+                      </span>
                       {isEditing ? (
                         <Input
                           value={item?.name || ""}
@@ -97,58 +108,84 @@ export default function Inventory() {
 
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-muted-foreground block">Quantity</span>
+                        <span className="text-muted-foreground block">
+                          Quantity
+                        </span>
                         {isEditing ? (
                           <Input
                             type="number"
                             value={item?.amount || 0}
-                            onChange={(e) => handleChange("amount", parseInt(e.target.value))}
+                            onChange={(e) =>
+                              handleChange("amount", parseInt(e.target.value))
+                            }
                           />
                         ) : (
                           <p className="font-medium">{item?.amount}</p>
                         )}
                       </div>
                       <div>
-                        <span className="text-muted-foreground block">Supplier</span>
+                        <span className="text-muted-foreground block">
+                          Supplier
+                        </span>
                         {isEditing ? (
                           <Input
                             value={item?.supplier || ""}
-                            onChange={(e) => handleChange("supplier", e.target.value)}
+                            onChange={(e) =>
+                              handleChange("supplier", e.target.value)
+                            }
                           />
                         ) : (
                           <p className="font-medium">{item?.supplier}</p>
                         )}
                       </div>
                       <div>
-                        <span className="text-muted-foreground block">Buying Price</span>
+                        <span className="text-muted-foreground block">
+                          Buying Price
+                        </span>
                         {isEditing ? (
                           <Input
                             type="number"
                             value={item?.buyingCost || 0}
-                            onChange={(e) => handleChange("buyingCost", parseFloat(e.target.value))}
+                            onChange={(e) =>
+                              handleChange(
+                                "buyingCost",
+                                parseFloat(e.target.value)
+                              )
+                            }
                           />
                         ) : (
                           <p className="font-medium">${item?.buyingCost}</p>
                         )}
                       </div>
                       <div>
-                        <span className="text-muted-foreground block">Selling Price</span>
+                        <span className="text-muted-foreground block">
+                          Selling Price
+                        </span>
                         {isEditing ? (
                           <Input
                             type="number"
                             value={item?.sellingCost || 0}
-                            onChange={(e) => handleChange("sellingCost", parseFloat(e.target.value))}
+                            onChange={(e) =>
+                              handleChange(
+                                "sellingCost",
+                                parseFloat(e.target.value)
+                              )
+                            }
                           />
                         ) : (
                           <p className="font-medium">${item?.sellingCost}</p>
                         )}
                       </div>
                       <div className="col-span-2">
-                        <span className="text-muted-foreground block">Barcode</span>
+                        <span className="text-muted-foreground block">
+                          Barcode
+                        </span>
                         {isEditing ? (
                           <Input
                             value={item?.barcode || ""}
-                            onChange={(e) => handleChange("barcode", e.target.value)}
+                            onChange={(e) =>
+                              handleChange("barcode", e.target.value)
+                            }
                           />
                         ) : (
                           <p className="font-medium">{item?.barcode}</p>
@@ -162,7 +199,10 @@ export default function Inventory() {
                   {isEditing ? (
                     <Button onClick={handleSave}>Save</Button>
                   ) : (
-                    <Button variant="outline" onClick={() => setIsEditing(true)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsEditing(true)}
+                    >
                       Edit
                     </Button>
                   )}
@@ -176,7 +216,8 @@ export default function Inventory() {
               </>
             )}
           </Card>
-        </div>
+
+          </div>
       </main>
     </div>
   );

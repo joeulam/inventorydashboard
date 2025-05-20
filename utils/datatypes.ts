@@ -22,4 +22,11 @@ export type OrderDataType = {
   status: string
 }
 
-
+export type HistoricalData = {
+  id: string,
+  item_id: string,
+  buyingCost: string,
+  sellingCost: string,
+  effective_from: string,
+  created_at:string
+}

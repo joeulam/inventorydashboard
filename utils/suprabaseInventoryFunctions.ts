@@ -41,14 +41,45 @@ export async function getItemById(id: string, table: string) {
   return data;
 }
 
-export async function updateItem(id: string, values: Partial<InventoryItem>) {
+export async function updateItem(id: string, updates: Partial<InventoryItem>) {
   const supabase = createClient();
-  const { error } = await supabase
+
+  const { data: currentItem, error: fetchError } = await supabase
     .from("inventory")
-    .update(values)
+    .select("buyingCost, sellingCost")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) return fetchError;
+
+  const priceChanged =
+    (updates.buyingCost !== undefined &&
+      updates.buyingCost !== currentItem.buyingCost) ||
+    (updates.sellingCost !== undefined &&
+      updates.sellingCost !== currentItem.sellingCost);
+
+  const { error: updateError } = await supabase
+    .from("inventory")
+    .update(updates)
     .eq("id", id);
 
-  return error;
+  if (updateError) return updateError;
+
+  if (priceChanged) {
+    const { error: historyError } = await supabase
+      .from("item_price_history")
+      .insert([
+        {
+          item_id: id,
+          buyingCost: updates.buyingCost ?? currentItem.buyingCost,
+          sellingCost: updates.sellingCost ?? currentItem.sellingCost,
+        },
+      ]);
+    if (historyError)
+      console.error("Price history insert failed:", historyError.message);
+  }
+
+  return null;
 }
 
 export async function addToCart(id: string, quantity: number) {
@@ -67,7 +98,7 @@ export async function addToCart(id: string, quantity: number) {
       item_name: item.name,
       amount: quantity,
       buyingCost: item.buyingCost,
-      status: "pending"
+      status: "pending",
     },
   ]);
   return error;
@@ -91,7 +122,7 @@ export async function getCurrentOrder() {
 export async function getOrderHistory() {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("order")
+    .from("orders")
     .select("*")
     .order("created_at", { ascending: false });
 
@@ -198,7 +229,7 @@ export async function submitOrder() {
     throw new Error("User not authenticated");
   }
 
-  const currentCart = await getCurrentOrder(); 
+  const currentCart = await getCurrentOrder();
   if (!currentCart.length) {
     throw new Error("Cart is empty");
   }
@@ -267,7 +298,7 @@ export async function markOrdersCompleted(selectedIds: string[]) {
   const { error } = await supabase
     .from("cart")
     .update({ status: "completed" })
-    .in("id", selectedIds); 
+    .in("id", selectedIds);
 
   return error;
 }
@@ -278,6 +309,71 @@ export async function markOrderCurrent(selectedIds: string) {
   const { error } = await supabase
     .from("cart")
     .update({ status: "pending" })
-    .eq("id", selectedIds); 
+    .eq("id", selectedIds);
   return error;
+}
+
+export async function submitCompletedOrder(items: InventoryItem[]) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    console.error("User not authenticated");
+    return;
+  }
+
+  const total = items.reduce(
+    (acc, item) => acc + item.buyingCost * item.amount,
+    0
+  );
+
+  const { error } = await supabase.from("orders").insert([
+    {
+      user_id: user.id,
+      items,
+      total,
+    },
+  ]);
+
+  if (error) {
+    console.error("Insert error:", error.message);
+    return error;
+  }
+
+  await Promise.all(items.map((item) => deleteItem(item.id, "cart")));
+
+  return null;
+}
+
+export async function getHistoricalPrice(id: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("item_price_history")
+    .select("*")
+    .eq("item_id", id);
+  if (error) {
+    console.error("Fetch error:", error.message);
+    return error;
+  }
+  console.log(data);
+  return data;
+}
+
+export async function getSuppliers() {
+  const supabase = createClient();
+  const { data, error } = await supabase
+  .from("inventory")
+  .select("*")
+  const suppliers = <string[]>[]
+
+  data?.map((item:InventoryItem) => suppliers.includes(item.supplier) ? null : suppliers.push(item.supplier))
+  if(error){
+    console.error("Fetch error:", error.message);
+    return [];
+  }
+
+  return suppliers
 }

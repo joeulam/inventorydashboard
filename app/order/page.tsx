@@ -12,6 +12,7 @@ import {
   getTotalQuantity,
   markOrderCurrent,
   markOrdersCompleted,
+  submitCompletedOrder,
 } from "../../utils/suprabaseInventoryFunctions";
 import { getColumnsOrder } from "./orderColumns";
 import { InventoryItem } from "@/utils/datatypes";
@@ -155,7 +156,7 @@ export default function Order() {
                 columns={getColumnsOrder(
                   () => {},
                   () => {},
-                  handleMove // pass the actual function!
+                  handleMove 
                 )}
                 data={completedOrders}
               />
@@ -166,7 +167,18 @@ export default function Order() {
               Quantity: {quantity}
             </h1>
             <h1 className="mt-5 font-bold text-right mr-10">Total: {total}</h1>
-            <Button className="mt-5">Submit</Button>
+            <Button
+              className="mt-5"
+              onClick={async () => {
+                if (!completedOrders.length) return;
+                const error = await submitCompletedOrder(completedOrders);
+                if (!error) {
+                  await fetchOrder(); 
+                }
+              }}
+            >
+              Submit Order
+            </Button>
           </div>
         </div>
       </main>

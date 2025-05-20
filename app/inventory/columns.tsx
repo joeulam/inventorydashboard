@@ -21,10 +21,6 @@ export function getColumns(
 
   return [
     {
-      accessorKey: "id",
-      header: "Id",
-    },
-    {
       accessorKey: "name",
       header: "Name",
     },

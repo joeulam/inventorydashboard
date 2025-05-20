@@ -8,6 +8,7 @@ import { deleteItem, getItemById, getOrderHistory } from "../../utils/suprabaseI
 import { getColumns } from "./columns";
 import { InventoryItem } from "@/utils/datatypes";
 import { DataTable } from "./orderHistoryTable";
+import { useRouter } from "next/navigation";
 
 
 
@@ -45,6 +46,7 @@ export default function OrderHistory() {
   useEffect(() => {
     fetchOrder();
   }, []);
+  const router = useRouter()
 
   return (
     <div className="flex h-screen">
@@ -67,7 +69,7 @@ export default function OrderHistory() {
           {loading ? (
             <>loading...</>
           ) : (
-            <DataTable columns={getColumns(handleEdit, handleDelete,)} data={items} />
+            <DataTable columns={getColumns(handleEdit, handleDelete, router)} data={items} />
           )}
         </div>
       </main>

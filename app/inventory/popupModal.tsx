@@ -46,10 +46,10 @@ export function AddNewInventoryCard({
   const form = useForm<Partial<InventoryItem>>({
     defaultValues: {
       name: "",
-      buyingCost: 0,
-      sellingCost: 0,
+      buyingCost: undefined,
+      sellingCost: undefined,
       supplier: "",
-      amount: 0,
+      amount: undefined,
       barcode: "",
       image: "",
     },
@@ -121,13 +121,15 @@ export function AddNewInventoryCard({
   };
 
   return (
+
+   
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="cursor-pointer" variant="outline">
           Add new item
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] h-[80vh] overflow-scroll">
         <DialogHeader>
           <DialogTitle>{itemToEdit ? "Edit Item" : "New Item"}</DialogTitle>
         </DialogHeader>
@@ -157,7 +159,7 @@ export function AddNewInventoryCard({
                 <FormItem>
                   <FormLabel>Selling Cost</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0" {...field} />
+                    <Input type="number" placeholder="0.00"  {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
