@@ -13,10 +13,12 @@ import {
 import { getColumns } from "./columns";
 import { InventoryItem } from "@/utils/datatypes";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input"; 
 
 export default function Inventory() {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [openModal, setOpenModal] = useState(false);
@@ -48,7 +50,12 @@ export default function Inventory() {
   useEffect(() => {
     fetchInventory();
   }, []);
+
   const router = useRouter();
+
+  const filteredItems = items.filter((item) =>
+    `${item.name} ${item.supplier}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex h-screen sm:w-[100vw]">
@@ -67,13 +74,22 @@ export default function Inventory() {
           />
         </div>
 
+        <div className="mt-6 max-w-md">
+          <Input
+            type="text"
+            placeholder="Search inventory by name or supplier..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
         <div className="pt-10">
           {loading ? (
             <>loading...</>
           ) : (
             <DataTable
               columns={getColumns(handleEdit, handleDelete, router)}
-              data={items}
+              data={filteredItems}
             />
           )}
         </div>

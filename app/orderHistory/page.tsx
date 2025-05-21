@@ -27,7 +27,7 @@ export default function OrderHistory() {
   };
 
   const handleDelete = async (id: string) => {
-    const error = await deleteItem(id, "order");
+    const error = await deleteItem(id, "orders");
     if (!error) {
       setItems((prev) => prev.filter((item) => item.id !== id));
     } else {

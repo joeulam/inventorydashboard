@@ -259,7 +259,7 @@ export async function submitOrder() {
     })
   );
 
-  const { data, error } = await supabase.from("order").insert([
+  const { data, error } = await supabase.from("orders").insert([
     {
       user_id: user.id,
       items: itemsArray,
