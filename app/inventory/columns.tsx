@@ -64,7 +64,7 @@ export function getColumns(
                 <DropdownMenuItem onClick={() => addToCart(item.id, 1)}>
                   Add to Order
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={ () => router.push(`../inventory/${row._getAllVisibleCells()[0].getContext().getValue()}`)}
+                <DropdownMenuItem onClick={ () => router.push(`../inventory/${item.id}`)}
                 >
                   More Detail
                 </DropdownMenuItem>
