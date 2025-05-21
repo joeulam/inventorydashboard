@@ -402,6 +402,7 @@ export function AddNewInventoryCard({
                   />
                   <p className="font-bold text-sm">Scanned: {data}</p>
                   <Button
+                  className="cursor-pointer"
                     type="button"
                     variant="ghost"
                     size="sm"
@@ -412,7 +413,7 @@ export function AddNewInventoryCard({
                 </div>
               )}
 
-              <Button type="submit">
+              <Button className="cursor-pointer" type="submit">
                 {itemToEdit ? "Update Item" : "Add to Inventory"}
               </Button>
             </DialogFooter>
