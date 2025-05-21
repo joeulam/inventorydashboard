@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 function Popover({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />
+  return <PopoverPrimitive.Root modal={true} data-slot="popover" {...props} />
 }
 
 function PopoverTrigger({
@@ -24,7 +24,6 @@ function PopoverContent({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
   return (
-    <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content
         data-slot="popover-content"
         align={align}
@@ -35,7 +34,6 @@ function PopoverContent({
         )}
         {...props}
       />
-    </PopoverPrimitive.Portal>
   )
 }
 

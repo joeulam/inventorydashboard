@@ -15,6 +15,7 @@ import Link from "next/link";
 export default function SupplierInventoryPage() {
   const [items, setItems] = useState<(InventoryItem & { imageUrl?: string | null })[]>([]);
   const [loading, setLoading] = useState(true);
+  
   const slug = useParams();
   const supabase = createClient();
   const router = useRouter();
