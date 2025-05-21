@@ -273,7 +273,7 @@ export function AddNewInventoryCard({
                   </Button>
                 </div>
               )}
-
+                
               <Button type="submit">
                 {itemToEdit ? "Update Item" : "Add to Inventory"}
               </Button>

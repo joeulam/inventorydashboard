@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { InventoryItem, OrderDataType } from "./datatypes";
+import { CategoryDataType, InventoryItem, OrderDataType } from "./datatypes";
 import imageCompression from "browser-image-compression";
 
 export async function getInventory(): Promise<InventoryItem[]> {
@@ -376,4 +376,27 @@ export async function getSuppliers() {
   }
 
   return suppliers
+}
+
+export async function insertNewCatagory(id:string, name:string) {
+  const supabase = createClient();
+  const { error } = await supabase
+  .from("inventory_categories")
+  .insert({id:id, name:name})
+  if (error){
+    console.error("Fetch error:", error.message);
+  }
+}
+export async function getCategories(): Promise<CategoryDataType[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("inventory_categories")
+    .select("*");
+
+  if (error) {
+    console.error("Category fetch error:", error.message);
+    return [];
+  }
+
+  return data;
 }

@@ -6,18 +6,18 @@ export const sideBarItems = [
   {
     type: "divider",
   },
-  {
-    label: "Analytics & Data",
-    children: [
-      { label: "Product Performance", href: "/dashboard/product-performance" },
-      { label: "Order Statistics", href: "/dashboard/order-statistics" },
-      { label: "Sales Overview", href: "/dashboard/sales" },
-      { label: "Supplier Metrics", href: "/dashboard/supplier-metrics" },
-    ],
-  },
-  {
-    type: "divider",
-  },
+  // {
+  //   label: "Analytics & Data",
+  //   children: [
+  //     { label: "Product Performance", href: "/dashboard/product-performance" },
+  //     { label: "Order Statistics", href: "/dashboard/order-statistics" },
+  //     { label: "Sales Overview", href: "/dashboard/sales" },
+  //     { label: "Supplier Metrics", href: "/dashboard/supplier-metrics" },
+  //   ],
+  // },
+  // {
+  //   type: "divider",
+  // },
   {
     label: "Merchandising",
     children: [
@@ -26,6 +26,7 @@ export const sideBarItems = [
       { label: "Order History", href: "/orderHistory" },
       { label: "Supplier", href: "/supplier" },
       { label: "Store entry", href: "/entries" },
+      { label: "Category", href: "/category" },
     ],
   },
   {

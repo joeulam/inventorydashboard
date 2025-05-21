@@ -26,70 +26,75 @@ export function InventorySearchComboBox({ onAdd }: Props) {
   const [value, setValue] = useState("");
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const handleInventory = async () => {
+    const fetchInventory = async () => {
       const inventory = await getInventory();
       setInventory(inventory);
     };
-    handleInventory();
+    fetchInventory();
   }, []);
 
   const handleSelect = async (item: InventoryItem) => {
     setLoading(true);
-    await addToCart(item.id, 1); 
-    setValue("");
+    await addToCart(item.id, 1);
+    setValue(""); // clear button label
+    setSearch(""); // clear command input
     setOpen(false);
     setLoading(false);
-    if (onAdd) onAdd();
+    onAdd?.();
   };
 
   return (
-    <div>
+    <div className="w-full sm:max-w-xs">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            disabled={loading}
+            className="w-full justify-between"
+          >
+            {loading
+              ? "Adding..."
+              : value || "Search and add to order..."}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
 
-    <Popover open={open} onOpenChange={setOpen} >
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          disabled={loading}
-          className="w-[300px] justify-between"
-        >
-          {loading
-            ? "Adding..."
-            : value
-            ? value
-            : "Search and add to order..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="w-[300px] p-0">
-        <Command>
-          <CommandInput placeholder="Search item..." />
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup>
-            {inventory.map((item) => (
-              <CommandItem
-                key={item.id}
-                value={item.name}
-                onSelect={() => handleSelect(item)}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === item.name ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {item.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+        <PopoverContent className="w-[250px] sm:w-[300px] p-0">
+          <Command>
+            <CommandInput
+              placeholder="Search item..."
+              value={search}
+              onValueChange={setSearch}
+            />
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {inventory.map((item) => (
+                <CommandItem
+                  key={item.id}
+                  value={item.name}
+                  onSelect={() => {
+                    setValue(item.name);
+                    handleSelect(item);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === item.name ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {item.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
-
   );
 }

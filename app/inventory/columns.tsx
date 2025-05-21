@@ -32,11 +32,6 @@ export function getColumns(
         <ImageCell imageKey={row.original.image} alt={row.original.name} />
       ),
     },
-
-    {
-      accessorKey: "supplier",
-      header: "Supplier",
-    },
     {
       accessorKey: "sellingCost",
       header: "Selling Cost",
@@ -52,11 +47,6 @@ export function getColumns(
         const value = row.original.buyingCost;
         return typeof value === "number" ? `$${value.toFixed(2)}` : value;
       },
-    },
-
-    {
-      accessorKey: "amount",
-      header: "Quantity",
     },
     {
       id: "actions",

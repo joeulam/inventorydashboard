@@ -9,6 +9,12 @@ export type InventoryItem = {
   user_id: string;
   barcode: string
   image: string
+  category_id: string; 
+}
+
+export type CategoryDataType = {
+  id: string;
+  name: string;
 };
 
 export type OrderDataType = {
