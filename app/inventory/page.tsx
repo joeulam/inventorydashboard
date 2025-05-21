@@ -14,6 +14,7 @@ import { getColumns } from "./columns";
 import { InventoryItem } from "@/utils/datatypes";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input"; 
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Inventory() {
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -54,7 +55,7 @@ export default function Inventory() {
   const router = useRouter();
 
   const filteredItems = items.filter((item) =>
-    `${item.name} ${item.supplier}`.toLowerCase().includes(searchTerm.toLowerCase())
+    `${item.name} ${item.supplier} ${item.barcode}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -93,6 +94,8 @@ export default function Inventory() {
             />
           )}
         </div>
+        <Toaster />
+
       </main>
     </div>
   );

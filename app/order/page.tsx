@@ -18,6 +18,7 @@ import { getColumnsOrder } from "./orderColumns";
 import { InventoryItem } from "@/utils/datatypes";
 import { AddNewInventoryCard } from "../orderHistory/popupOrderModal";
 import { Button } from "@/components/ui/button";
+import { InventorySearchComboBox } from "@/components/inventoryCombobox";
 
 export default function Order() {
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -103,6 +104,8 @@ export default function Order() {
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Current Order</h2>
               <div className="flex gap-2">
+                <InventorySearchComboBox onAdd={fetchOrder} />
+
                 <AddNewInventoryCard
                   itemToEdit={selectedItem}
                   open={openModal}
@@ -112,22 +115,6 @@ export default function Order() {
                   }}
                   onAdd={fetchOrder}
                 />
-                <Button
-                  className="cursor-pointer"
-                  variant="secondary"
-                  onClick={async () => {
-                    console.log("Selected IDs:", selectedIds);
-                    if (!selectedIds.length) return;
-                    const error = await markOrdersCompleted(selectedIds);
-                    if (!error) {
-                      await fetchOrder();
-                    } else {
-                      console.error("Update failed:", error.message);
-                    }
-                  }}
-                >
-                  Mark as Completed
-                </Button>
               </div>
             </div>
             {loading ? (
@@ -146,7 +133,22 @@ export default function Order() {
               </div>
             )}
           </section>
-
+          <Button
+            className="cursor-pointer"
+            variant="secondary"
+            onClick={async () => {
+              console.log("Selected IDs:", selectedIds);
+              if (!selectedIds.length) return;
+              const error = await markOrdersCompleted(selectedIds);
+              if (!error) {
+                await fetchOrder();
+              } else {
+                console.error("Update failed:", error.message);
+              }
+            }}
+          >
+            Mark as Completed
+          </Button>
           <section>
             <h2 className="text-2xl font-bold mb-4">Completed Orders</h2>
             {loading ? (
@@ -156,7 +158,7 @@ export default function Order() {
                 columns={getColumnsOrder(
                   () => {},
                   () => {},
-                  handleMove 
+                  handleMove
                 )}
                 data={completedOrders}
               />
@@ -166,14 +168,14 @@ export default function Order() {
             <h1 className="mt-5 font-bold text-right mr-10">
               Quantity: {quantity}
             </h1>
-            <h1 className="mt-5 font-bold text-right mr-10">Total: {total}</h1>
+            <h1 className="mt-5 font-bold text-right mr-10">Total: {`$${total.toFixed(2)}`}</h1>
             <Button
               className="mt-5"
               onClick={async () => {
                 if (!completedOrders.length) return;
                 const error = await submitCompletedOrder(completedOrders);
                 if (!error) {
-                  await fetchOrder(); 
+                  await fetchOrder();
                 }
               }}
             >

@@ -48,10 +48,16 @@ export function getColumnsOrder(
     {
       accessorKey: "buyingCost",
       header: "Buying Cost",
+      cell: ({ row }) => {
+        const value = row.original.buyingCost;
+        return typeof value === "number" ? `$${value.toFixed(2)}` : value;
+      },
     },
+    
     {
       accessorKey: "amount",
       header: "Amount",
+      
     },
     {
       id: "actions",
@@ -72,7 +78,7 @@ export function getColumnsOrder(
               <DropdownMenuItem onClick={() => onEdit(item.id)}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(item.id)}>
+              <DropdownMenuItem className={`text-red-400`} onClick={() => onDelete(item.id)}>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -40,13 +40,13 @@ export function getColumns(
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onDelete(item.id)}>
-                Delete
-              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push(`/orderHistory/${item.id}`)}
               >
                 View order
+              </DropdownMenuItem>
+              <DropdownMenuItem className={`text-red-400`} onClick={() => onDelete(item.id)}>
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
