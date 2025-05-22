@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 
 export default function Supplier() {
   const [supplierName, setSupplierName] = useState<string[]>([]);
-  const router = useRouter()
+  const router = useRouter();
   useEffect(() => {
     const handleSuppliers = async () => {
       const suppliers = await getSuppliers();
@@ -29,9 +29,9 @@ export default function Supplier() {
   return (
     <div className="flex max-h-screen">
       <Sidebar />
-      <main className="flex-1 overflow-y-hidden p-6 bg-gray-50">
-      <h1 className="text-3xl">Supplier</h1>
-        <div className="flex justify-between items-center w-full">
+      <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <div className="max-w-xl mx-auto">
+          <h1 className="text-3xl">Supplier</h1>
           <Table>
             <TableCaption>A list of your suppliers</TableCaption>
             <TableHeader>
@@ -41,11 +41,14 @@ export default function Supplier() {
             </TableHeader>
             <TableBody>
               {supplierName.map((item, index) => (
-                <TableRow onClick={() => router.push(`/supplier/${encodeURIComponent(item)}`)} key={index} className="hover:bg-gray-100">
-                  <TableCell className="font-medium">
-                    
-                      {item}
-                  </TableCell>
+                <TableRow
+                  onClick={() =>
+                    router.push(`/supplier/${encodeURIComponent(item)}`)
+                  }
+                  key={index}
+                  className="hover:bg-gray-100 cursor-poi"
+                >
+                  <TableCell className="font-medium">{item}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

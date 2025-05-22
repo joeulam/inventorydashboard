@@ -86,7 +86,6 @@ export function AddNewInventoryCard({
 
       setCategories(fetchedCategories);
 
-      // If editing, reset form with existing values and set selected category
       if (itemToEdit) {
         form.reset({
           name: itemToEdit.name,

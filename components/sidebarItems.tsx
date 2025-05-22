@@ -25,7 +25,7 @@ export const sideBarItems = [
       { label: "Order", href: "/order" },
       { label: "Order History", href: "/orderHistory" },
       { label: "Supplier", href: "/supplier" },
-      { label: "Store entry", href: "/entries" },
+      // { label: "Store entry", href: "/entries" },
       { label: "Categories", href: "/category" },
     ],
   },
