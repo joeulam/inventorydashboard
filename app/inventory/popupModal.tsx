@@ -62,6 +62,7 @@ export function AddNewInventoryCard({
       amount: undefined,
       barcode: "",
       image: "",
+      category_id: undefined,
     },
   });
 

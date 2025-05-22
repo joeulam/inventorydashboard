@@ -18,7 +18,8 @@ import { toast } from "sonner";
 export function getColumns(
   onEdit: (id: string) => void,
   onDelete: (id: string) => void,
-  router: ReturnType<typeof useRouter>
+  router: ReturnType<typeof useRouter>,
+  categoryMap: Record<string, string>
 ): ColumnDef<InventoryItem>[] {
   return [
     {
@@ -47,6 +48,12 @@ export function getColumns(
         const value = row.original.buyingCost;
         return typeof value === "number" ? `$${value.toFixed(2)}` : value;
       },
+    },
+    {
+      accessorKey: "category_id",
+      header: "Category",
+      cell: ({ row }) =>
+        categoryMap[row.original.category_id] ?? "—",   
     },
     {
       id: "actions",

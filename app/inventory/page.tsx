@@ -7,13 +7,14 @@ import { DataTable } from "./inventoryTable";
 import { AddNewInventoryCard } from "./popupModal";
 import {
   deleteItem,
+  getCategories,
   getInventory,
   getItemById,
 } from "../../utils/suprabaseInventoryFunctions";
 import { getColumns } from "./columns";
 import { InventoryItem } from "@/utils/datatypes";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input"; 
+import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/sonner";
 
 export default function Inventory() {
@@ -23,6 +24,7 @@ export default function Inventory() {
 
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState("");
 
   const fetchInventory = async () => {
     setLoading(true);
@@ -52,11 +54,31 @@ export default function Inventory() {
     fetchInventory();
   }, []);
 
+  const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    async function fetchCats() {
+      const cats = await getCategories(); 
+      setCategoryMap(Object.fromEntries(cats.map((c) => [c.id, c.name])));
+    }
+    fetchCats();
+  }, []);
+
   const router = useRouter();
 
-  const filteredItems = items.filter((item) =>
-    `${item.name} ${item.supplier} ${item.barcode}`.toLowerCase().includes(searchTerm.toLowerCase())
+  const groupOptions = Array.from(
+    new Set(items.map((item) => item.category_id).filter(Boolean))
   );
+
+  const filteredItems = items
+    .filter((item) =>
+      `${item.name} ${item.supplier} ${item.barcode}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    )
+    .filter((item) =>
+      selectedGroup ? item.category_id === selectedGroup : true
+    );
 
   return (
     <div className="flex h-screen sm:w-[100vw]">
@@ -83,19 +105,40 @@ export default function Inventory() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+        <div className="mt-4 max-w-sm">
+          <label className="block mb-1 text-sm font-medium">
+            Filter by Category
+          </label>
+          <select
+            className="border rounded px-3 py-2 w-full"
+            value={selectedGroup}
+            onChange={(e) => setSelectedGroup(e.target.value)}
+          >
+            <option value="">All Categories</option>
+            {groupOptions.map((groupId) => (
+              <option key={groupId} value={groupId}>
+                {categoryMap[groupId]}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div className="pt-10">
           {loading ? (
             <>loading...</>
           ) : (
             <DataTable
-              columns={getColumns(handleEdit, handleDelete, router)}
+              columns={getColumns(
+                handleEdit,
+                handleDelete,
+                router,
+                categoryMap
+              )}
               data={filteredItems}
             />
           )}
         </div>
         <Toaster />
-
       </main>
     </div>
   );
