@@ -46,7 +46,7 @@ export default function Supplier() {
                     router.push(`/supplier/${encodeURIComponent(item)}`)
                   }
                   key={index}
-                  className="hover:bg-gray-100 cursor-poi"
+                  className="hover:bg-gray-100 cursor-pointer"
                 >
                   <TableCell className="font-medium">{item}</TableCell>
                 </TableRow>
