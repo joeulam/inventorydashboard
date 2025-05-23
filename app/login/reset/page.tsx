@@ -42,7 +42,7 @@ export default function PasswordReset(){
                   required
                 />
               </div>
-              <Button onClick={resetPass}>Reset</Button>
+              <Button onClick={resetPass} type="button">Reset</Button>
               <Button onClick={router.back} variant={`secondary`} type="button" className="w-full cursor-pointer">
                 Back
               </Button>
