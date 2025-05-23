@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { CategoryDataType, InventoryItem, OrderDataType } from "./datatypes";
+import { CategoryDataType, InventoryItem, OrderDataType, UserProfile } from "./datatypes";
 import imageCompression from "browser-image-compression";
 
 export async function getInventory(): Promise<InventoryItem[]> {
@@ -110,7 +110,6 @@ export async function getCurrentOrder() {
     .from("cart")
     .select("*")
     .order("added_at", { ascending: false });
-  console.log(data);
   if (error) {
     console.error("Fetch current order error:", error.message);
     return [];
@@ -208,7 +207,6 @@ export async function getImage(path: string) {
     .from("imagebucket")
     .createSignedUrl(path, 60 * 60);
 
-  console.log(data);
   if (error) {
     console.error("Signed URL error:", error.message);
     return null;
@@ -358,7 +356,6 @@ export async function getHistoricalPrice(id: string) {
     console.error("Fetch error:", error.message);
     return error;
   }
-  console.log(data);
   return data;
 }
 
@@ -387,6 +384,7 @@ export async function insertNewCatagory(id:string, name:string) {
     console.error("Fetch error:", error.message);
   }
 }
+
 export async function getCategories(): Promise<CategoryDataType[]> {
   const supabase = createClient();
   const { data, error } = await supabase
@@ -399,4 +397,55 @@ export async function getCategories(): Promise<CategoryDataType[]> {
   }
 
   return data;
+}
+
+export async function getUserData(): Promise<UserProfile> {
+  const supabase = createClient();
+  const user = await supabase.auth.getUser()
+  if (!user) {
+    console.error("User not authenticated");
+  }
+  const { data, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("user_id",user.data.user?.id)
+    .single();
+  if (error) {
+    console.error("Profile fetch error: ", error)
+    return {id:"", user_id:"", store_name:""}
+  }
+  return data as unknown as UserProfile
+}
+
+export async function setStoreName(name:string) {
+  const supabase = createClient()
+  const user = await supabase.auth.getUser()
+  if (!user) {
+    console.error("User not authenticated");
+    return;
+  }
+  const { error } = await supabase.from("profile")
+  .insert({user_id: user.data.user?.id})
+  .eq("store_name",name)
+  .select()
+  if (error) {
+    console.error("Insert error:", error.message);
+    return error;
+  }
+}
+
+export async function updateStoreName(name:string) {
+  const supabase = createClient()
+  const user = await supabase.auth.getUser()
+  if (!user) {
+    console.error("User not authenticated");
+    return;
+  }
+  const { error } = await supabase.from("profile")
+  .update({"store_name":name})
+  .eq("user_id", user.data.user?.id)
+  if (error) {
+    console.error("Insert error:", error.message);
+    return error;
+  }
 }

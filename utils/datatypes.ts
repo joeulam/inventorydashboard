@@ -36,3 +36,9 @@ export type HistoricalData = {
   effective_from: string,
   created_at:string
 }
+
+export type UserProfile = {
+  id: string
+  user_id: string
+  store_name: string
+}

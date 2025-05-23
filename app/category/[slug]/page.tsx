@@ -30,7 +30,6 @@ export default function CategoryPage() {
 
       // Find category by id
       const matchedCategory = categories.find((cat) => cat.id === slug.slug);
-      console.log(slug.slug)
       if (matchedCategory) {
         setCategoryName(matchedCategory.name);
       } else {

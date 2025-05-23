@@ -2,17 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { sideBarItems } from "./sidebarItems";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { useProfile } from "@/app/profile/profileHelperFunctions";
 
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [storeName, setStoreName] = useState("")
+  const data = useProfile()
+  useEffect(() => {
+    setStoreName(data.storeName)
+  },[data.storeName])
   return (
     <>
       <div className="fixed top-4 left-4 z-50 md:hidden">
@@ -34,7 +39,7 @@ export function Sidebar() {
         )}
       >
         <div className="flex items-center justify-between p-4 md:hidden border-b">
-          <div className="text-lg font-semibold">Lam Mark Trading</div>
+          <div className="text-lg font-semibold">{storeName}</div>
           <Button
             size="icon"
             variant="ghost"
@@ -45,7 +50,7 @@ export function Sidebar() {
         </div>
 
         <div className="p-4 text-lg font-semibold border-b hidden md:block">
-          Lam Mark Trading
+          {storeName}
         </div>
 
         <ScrollArea className="h-[calc(100vh-60px)] p-4">

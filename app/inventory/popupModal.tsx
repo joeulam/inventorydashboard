@@ -301,8 +301,6 @@ export function AddNewInventoryCard({
                                   console.error("User not authenticated");
                                   return;
                                 }
-                                console.log(search.trim(), user.id);
-
                                 const { data, error } = await supabase
                                   .from("inventory_categories")
                                   .insert({
