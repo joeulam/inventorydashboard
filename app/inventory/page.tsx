@@ -21,7 +21,7 @@ export default function Inventory() {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState("");
@@ -50,11 +50,6 @@ export default function Inventory() {
     }
   };
 
-  useEffect(() => {
-    fetchInventory();
-  }, []);
-
-  const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     async function fetchCats() {
@@ -62,6 +57,8 @@ export default function Inventory() {
       setCategoryMap(Object.fromEntries(cats.map((c) => [c.id, c.name])));
     }
     fetchCats();
+    fetchInventory();
+
   }, []);
 
   const router = useRouter();

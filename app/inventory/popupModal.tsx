@@ -400,7 +400,7 @@ export function AddNewInventoryCard({
                   />
                   <p className="font-bold text-sm">Scanned: {data}</p>
                   <Button
-                  className="cursor-pointer"
+                    className="cursor-pointer"
                     type="button"
                     variant="ghost"
                     size="sm"
