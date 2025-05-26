@@ -24,7 +24,7 @@ export function SignupForm({
       email,
       password,
       options:{
-        emailRedirectTo: 'https://invery.vercel.app/dashboard'
+        emailRedirectTo: '{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next={{ .RedirectTo }}'
       }
     });
 

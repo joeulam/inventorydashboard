@@ -7,57 +7,52 @@ import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 
-export default function NewPassword() {
+export default function ChangePassword() {
   const [password, setPassword] = useState("");
-  const [sessionLoaded, setSessionLoaded] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [sessionExists, setSessionExists] = useState(false);
 
   const router = useRouter();
   const supabase = createClient();
-  const searchParams = useSearchParams();
-  const code = searchParams.get("code");
 
   useEffect(() => {
-    const waitForSession = async () => {
-      if (!code) {
-        setErrorMsg("Missing code in URL. Please retry the reset link.");
-        setLoading(false);
-        return;
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setSessionExists(true);
+      } else {
+        setErrorMsg("You must be logged in to change your password.");
       }
-
-      for (let i = 0; i < 3; i++) {
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-        if (data?.session) {
-          setSessionLoaded(true);
-          break;
-        } else if (error) {
-          console.error("Exchange failed:", error.message);
-          setErrorMsg("Failed to validate session. Please try again.");
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-
-      setLoading(false);
     };
-
-    waitForSession();
+    checkSession();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
+    setSuccessMsg(null);
+
+    if (!password.trim() || password.length < 6) {
+      setErrorMsg("Password must be at least 6 characters.");
+      return;
+    }
+
+    setLoading(true);
+
     const { error } = await supabase.auth.updateUser({ password });
 
     if (!error) {
-      router.push("/dashboard");
+      setSuccessMsg("Password updated successfully.");
+      setTimeout(() => router.push("/dashboard"), 1500);
     } else {
-      console.error("Password reset failed:", error.message);
-      setErrorMsg("Password update failed. Try again later.");
+      console.error("Password update failed:", error.message);
+      setErrorMsg("Password update failed. Try again." + error.message);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -68,33 +63,36 @@ export default function NewPassword() {
             <form className="p-6 md:p-8" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col">
-                  <h1 className="text-2xl font-bold">New Password</h1>
-                  {loading && (
-                    <p className="text-sm text-muted-foreground">
-                      Waiting for session...
+                  <h1 className="text-2xl font-bold">Change Password</h1>
+                  {!sessionExists && (
+                    <p className="text-sm text-red-500">
+                      You must be logged in to access this page.
                     </p>
                   )}
                   {errorMsg && (
                     <p className="text-sm text-red-500">{errorMsg}</p>
                   )}
+                  {successMsg && (
+                    <p className="text-sm text-green-600">{successMsg}</p>
+                  )}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">New Password</Label>
                   <Input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    disabled={!sessionLoaded}
+                    disabled={!sessionExists}
                   />
                 </div>
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={!sessionLoaded || loading}
+                  disabled={!sessionExists || loading}
                 >
-                  {loading ? "Loading..." : "Submit"}
+                  {loading ? "Updating..." : "Update Password"}
                 </Button>
               </div>
             </form>

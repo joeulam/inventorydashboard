@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { useProfile, updateProfile } from "./profileHelperFunctions";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
   const { email, storeName, error, setError, supabase, loading } = useProfile();
@@ -30,6 +31,7 @@ export default function Profile() {
   useEffect(() => {
     setChangedStoreName(storeName);
   }, [storeName]);
+  const router = useRouter()
 
   if (loading)
     return (
@@ -78,6 +80,7 @@ export default function Profile() {
             <h1 className="flex-row w-[55vw]">{success}</h1>
           </Alert>
         )}
+        <Button onClick={() => router.push(`../login/reset/new-pass`)}>Change password</Button>
 
         <Button onClick={handleUpdate} disabled={updating} className="w-full">
           {updating ? "Updating..." : "Update Profile"}
