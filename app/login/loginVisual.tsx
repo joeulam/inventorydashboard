@@ -15,7 +15,7 @@ export function LoginForm({
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null); // made visible
 
   const handleLogin = async () => {
     setError(null);
@@ -37,8 +37,8 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+        <CardContent className="grid p-02">
+          <form className="p-6 md:p-8" onSubmit={(e) => e.preventDefault()}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -46,15 +46,21 @@ export function LoginForm({
                   Login to your Invy account
                 </p>
               </div>
+              
+              {/* Error message */}
+              {error && (
+                <div className="rounded-md bg-red-100 p-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
+
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -72,15 +78,16 @@ export function LoginForm({
                   id="password"
                   type="password"
                   required
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button onClick={handleLogin} type="button" className="w-full cursor-pointer">
+              <Button
+                onClick={handleLogin}
+                type="button"
+                className="w-full cursor-pointer"
+              >
                 Login
               </Button>
-              
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
                 <a href="/signUp" className="underline underline-offset-4">
@@ -93,8 +100,8 @@ export function LoginForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our{" "}
+        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
       </div>
     </div>
   );

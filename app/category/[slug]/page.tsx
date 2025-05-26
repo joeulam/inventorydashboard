@@ -11,14 +11,14 @@ import { Button } from "@/components/ui/button";
 
 export default function CategoryPage() {
   const slug = useParams();
+  const router = useRouter();
   const supabase = createClient();
 
   const [categoryName, setCategoryName] = useState<string>("");
   const [items, setItems] = useState<InventoryItem[]>([]);
-  const router = useRouter()
+
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch all categories
       const { data: categories, error: catError } = await supabase
         .from("inventory_categories")
         .select("*");
@@ -28,15 +28,9 @@ export default function CategoryPage() {
         return;
       }
 
-      // Find category by id
       const matchedCategory = categories.find((cat) => cat.id === slug.slug);
-      if (matchedCategory) {
-        setCategoryName(matchedCategory.name);
-      } else {
-        setCategoryName("Unknown Category");
-      }
+      setCategoryName(matchedCategory ? matchedCategory.name : "Unknown Category");
 
-      // Fetch inventory items where category_id matches
       const { data: inventoryData, error: invError } = await supabase
         .from("inventory")
         .select("*")
@@ -50,31 +44,40 @@ export default function CategoryPage() {
       setItems(inventoryData);
     };
 
-fetchData();
-  }, [slug]);
+    fetchData();
+  }, [slug, supabase]);
 
   return (
-    <div className="flex max-h-screen">
+    <div className="flex h-screen">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-        <div className="max-w-xl mx-auto">
-          <h1 className="text-3xl mb-4">Category: {categoryName}</h1>
-          <Button onClick={() => router.back()}>Back</Button>
-          <h2 className="text-xl mb-2">Items in this category:</h2>
+      <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-6 flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-gray-800">
+              Category: {categoryName}
+            </h1>
+            <Button variant="outline" onClick={() => router.back()}>
+              ← Back
+            </Button>
+          </div>
+
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">
+            Items in this category:
+          </h2>
+
           {items.length === 0 ? (
             <p className="text-gray-500">No items found.</p>
           ) : (
-            items.map((item,index) => (
-              <Link key={index} href={`../../inventory/${item.id}`}>
-                <Card key={item.id} className="mb-4 p-4">
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-gray-500">
-                    Supplier: {item.supplier}
-                  </p>
-                </Card>
-              </Link>
-              
-            ))
+            <div className="space-y-4">
+              {items.map((item) => (
+                <Link key={item.id} href={`/inventory/${item.id}`}>
+                  <Card className="p-4 hover:bg-gray-100 transition cursor-pointer">
+                    <p className="font-medium text-gray-800">{item.name}</p>
+                    <p className="text-sm text-gray-500">Supplier: {item.supplier}</p>
+                  </Card>
+                </Link>
+              ))}
+            </div>
           )}
         </div>
       </main>

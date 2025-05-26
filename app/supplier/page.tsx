@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 export default function Supplier() {
   const [supplierName, setSupplierName] = useState<string[]>([]);
   const router = useRouter();
+
   useEffect(() => {
     const handleSuppliers = async () => {
       const suppliers = await getSuppliers();
@@ -27,30 +28,41 @@ export default function Supplier() {
   }, []);
 
   return (
-    <div className="flex max-h-screen">
+    <div className="flex h-screen">
       <Sidebar />
       <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-        <div className="max-w-xl mx-auto">
-          <h1 className="text-3xl">Supplier</h1>
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">Suppliers</h1>
+
           <Table>
-            <TableCaption>A list of your suppliers</TableCaption>
+            <TableCaption className="text-gray-500">
+              A list of all suppliers you&apos;ve added
+            </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Name</TableHead>
+                <TableHead className="text-left text-gray-600">Name</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {supplierName.map((item, index) => (
-                <TableRow
-                  onClick={() =>
-                    router.push(`/supplier/${encodeURIComponent(item)}`)
-                  }
-                  key={index}
-                  className="hover:bg-gray-100 cursor-pointer"
-                >
-                  <TableCell className="font-medium">{item}</TableCell>
+              {supplierName.length === 0 ? (
+                <TableRow>
+                  <TableCell className="text-gray-500 italic">No suppliers found.</TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                supplierName.map((item, index) => (
+                  <TableRow
+                    key={index}
+                    onClick={() =>
+                      router.push(`/supplier/${encodeURIComponent(item)}`)
+                    }
+                    className="hover:bg-gray-100 transition cursor-pointer"
+                  >
+                    <TableCell className="font-medium text-gray-800">
+                      {item}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

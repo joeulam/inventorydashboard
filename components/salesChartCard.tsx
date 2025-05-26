@@ -1,53 +1,37 @@
 "use client";
 
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
-import {
   LineChart,
   Line,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
+  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const data = [
-  { name: "Jan", sales: 400 },
-  { name: "Feb", sales: 300 },
-  { name: "Mar", sales: 500 },
-  { name: "Apr", sales: 200 },
-  { name: "May", sales: 600 },
-];
+type ChartData = {
+  date: string;
+  amount: number;
+  value: number;
+};
 
-export default function SalesChartCard() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
-
+export function InventoryChart({ data }: { data: ChartData[] }) {
   return (
-    <Card className="w-full">
+    <Card>
       <CardHeader>
-        <CardTitle>Monthly Sales Overview</CardTitle>
+        <CardTitle>Inventory Trends</CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px] p-6">
+      <CardContent className="h-[300px] p-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="date" />
             <YAxis />
             <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="sales"
-              stroke="#4f46e5"
-              strokeWidth={2}
-            />
+            <Line type="monotone" dataKey="amount" stroke="#3b82f6" name="Amount" />
+            <Line type="monotone" dataKey="value" stroke="#10b981" name="Value" />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

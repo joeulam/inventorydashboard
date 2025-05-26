@@ -40,7 +40,7 @@ export function SignupForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
-        <CardContent className="grid p-0 md:grid-cols-2">
+        <CardContent className="grid p-0">
           <form className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
@@ -62,8 +62,9 @@ export function SignupForm({
                 />
               </div>
               <div className="grid gap-2">
-                
-                <Input
+              <Label htmlFor="password">Password</Label>
+
+                <Input  
                   id="password"
                   type="password"
                   required

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/sidebar";
-
 import { CategoryDataType } from "@/utils/datatypes";
 import { createClient } from "@/utils/supabase/client";
 import {
@@ -14,11 +13,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Category() {
   const [categories, setCategories] = useState<CategoryDataType[]>([]);
-
+  const router = useRouter();
   const supabase = createClient();
 
   useEffect(() => {
@@ -26,34 +25,40 @@ export default function Category() {
       const { data, error } = await supabase
         .from("inventory_categories")
         .select("*");
+
       if (data) setCategories(data);
       if (error) console.error("Fetch error:", error);
     };
+
     fetchCategories();
   }, []);
 
   return (
-    <div className="flex max-h-screen">
+    <div className="flex h-screen">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-        <div className="max-w-xl mx-auto">
-          <h1 className="text-3xl mb-6">Categories</h1>
+      <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">Inventory Categories</h1>
 
           <Table>
-            <TableCaption>A list of your Categories</TableCaption>
+            <TableCaption className="text-gray-500">
+              A list of all categories you’ve created
+            </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Name</TableHead>
+                <TableHead className="text-left text-gray-600">Name</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {categories.map((item, index) => (
+              {categories.map((item) => (
                 <TableRow
-                  onClick={() => router.push(`category/${item.id}`)}
-                  key={index}
-                  className="hover:bg-gray-100 cursor-pointer"
+                  key={item.id}
+                  onClick={() => router.push(`/category/${item.id}`)}
+                  className="hover:bg-gray-100 transition cursor-pointer"
                 >
-                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell className="font-medium text-gray-800">
+                    {item.name}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

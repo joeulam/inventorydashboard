@@ -48,7 +48,7 @@ export default function HistoricalPrice({ id, refreshTrigger }: Props) {
   if (loading) return null;
 
   return (
-    <Card className="w-full ">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Price History</CardTitle>
       </CardHeader>
