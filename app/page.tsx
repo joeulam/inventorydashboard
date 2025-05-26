@@ -56,14 +56,14 @@ export default function Home() {
           transition={{ delay: 0.5 }}
         >
           <Button
-            className="w-full sm:w-auto px-8 py-6 text-lg"
+            className="w-full cursor-pointer sm:w-auto px-8 py-6 text-lg"
             onClick={() => router.push('/login')}
           >
             Login
           </Button>
           <Button
             variant="outline"
-            className="w-full sm:w-auto px-8 py-6 text-lg"
+            className="w-full cursor-pointer sm:w-auto px-8 py-6 text-lg"
             onClick={() => router.push('/signUp')}
           >
             Sign Up
