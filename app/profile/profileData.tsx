@@ -5,11 +5,15 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { useProfile, updateProfile } from "./profileHelperFunctions";
 import { useRouter } from "next/navigation";
+import { useDisplayMode } from "../../context/Display";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Profile() {
   const { email, storeName, error, setError, supabase, loading } = useProfile();
   const [success, setSuccess] = useState<string | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
+  const { viewMode, toggleView } = useDisplayMode();
 
   const [updating, setUpdating] = useState(false);
   const [changedStoreName, setChangedStoreName] = useState("");
@@ -31,7 +35,7 @@ export default function Profile() {
   useEffect(() => {
     setChangedStoreName(storeName);
   }, [storeName]);
-  const router = useRouter()
+  const router = useRouter();
 
   if (loading)
     return (
@@ -49,6 +53,7 @@ export default function Profile() {
           </label>
           <Input id="email" value={email} disabled className="w-full" />
         </div>
+        <Toaster />
 
         <div className="space-y-2">
           <label
@@ -80,7 +85,23 @@ export default function Profile() {
             <h1 className="flex-row w-[55vw]">{success}</h1>
           </Alert>
         )}
-        <Button onClick={() => router.push(`../login/reset/new-pass`)}>Change password</Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const nextView = viewMode === "table" ? "grid" : "table";
+            toggleView();
+            toast.success(
+              `Switched to ${nextView === "table" ? "Table" : "Grid"} View`
+            );
+          }}
+          className="w-full cursor-pointer"
+        >
+          Switch to {viewMode === "table" ? "Grid" : "Table"} View
+        </Button>
+
+        <Button onClick={() => router.push(`../login/reset/new-pass`)}>
+          Change password
+        </Button>
 
         <Button onClick={handleUpdate} disabled={updating} className="w-full">
           {updating ? "Updating..." : "Update Profile"}

@@ -8,6 +8,7 @@ import { AddNewInventoryCard } from "./popupModal";
 import {
   deleteItem,
   getCategories,
+  getImage,
   getInventory,
   getItemById,
 } from "../../utils/suprabaseInventoryFunctions";
@@ -16,6 +17,15 @@ import { InventoryItem } from "@/utils/datatypes";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/sonner";
+import { useDisplayMode } from "../../context/Display";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import Image from "next/image";
 
 export default function Inventory() {
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -25,6 +35,8 @@ export default function Inventory() {
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState("");
+  const { viewMode } = useDisplayMode();
+  const [imageMap, setImageMap] = useState<Record<string, string>>({});
 
   const fetchInventory = async () => {
     setLoading(true);
@@ -50,15 +62,27 @@ export default function Inventory() {
     }
   };
 
-
   useEffect(() => {
-    async function fetchCats() {
-      const cats = await getCategories(); 
+    async function init() {
+      const cats = await getCategories();
       setCategoryMap(Object.fromEntries(cats.map((c) => [c.id, c.name])));
-    }
-    fetchCats();
-    fetchInventory();
 
+      const data = await getInventory();
+      setItems(data);
+
+      const map: Record<string, string> = {};
+      await Promise.all(
+        data.map(async (item) => {
+          const url = await getImage(item.image);
+          map[item.id] = url!;
+        })
+      );
+      setImageMap(map);
+
+      setLoading(false);
+    }
+
+    init();
   }, []);
 
   const router = useRouter();
@@ -82,7 +106,9 @@ export default function Inventory() {
       <Sidebar />
       <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
         <div className="flex justify-between items-center w-full">
-          <h1 className="text-3xl">Inventory</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-3xl">Inventory</h1>
+          </div>
           <AddNewInventoryCard
             itemToEdit={selectedItem}
             open={openModal}
@@ -123,7 +149,7 @@ export default function Inventory() {
         <div className="pt-10">
           {loading ? (
             <>loading...</>
-          ) : (
+          ) : viewMode === "table" ? (
             <DataTable
               columns={getColumns(
                 handleEdit,
@@ -133,6 +159,55 @@ export default function Inventory() {
               )}
               data={filteredItems}
             />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredItems.map((item) => (
+                <Card key={item.id} className="p-0 overflow-hidden shadow-md">
+                  {imageMap[item.id] && (
+                    <div className="relative w-full h-48">
+                      <Image
+                        src={imageMap[item.id]}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+
+                  <CardHeader>
+                    <CardTitle className="text-lg">{item.name}</CardTitle>
+                  </CardHeader>
+
+                  <CardContent className="space-y-1 text-sm text-muted-foreground">
+                    <p>
+                      <strong>Supplier:</strong> {item.supplier}
+                    </p>
+                    <p>
+                      <strong>Barcode:</strong> {item.barcode}
+                    </p>
+                    <p>
+                      <strong>Category:</strong>{" "}
+                      {categoryMap[item.category_id] || "Uncategorized"}
+                    </p>
+                  </CardContent>
+
+                  <CardFooter className="flex justify-end gap-4">
+                    <button
+                      onClick={() => handleEdit(item.id)}
+                      className="text-blue-600 text-sm hover:underline"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="text-red-600 text-sm hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
           )}
         </div>
         <Toaster />
