@@ -64,7 +64,7 @@ export default function ChangePassword() {
             variant="ghost"
             size="icon"
             onClick={() => router.back()}
-            className="rounded-full"
+            className="rounded-full cursor-pointer"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -97,8 +97,9 @@ export default function ChangePassword() {
               </div>
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full cursor-pointer"
                 disabled={!sessionExists || loading}
+                
               >
                 {loading ? "Updating..." : "Update Password"}
               </Button>

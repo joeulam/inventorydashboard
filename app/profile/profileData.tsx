@@ -99,11 +99,11 @@ export default function Profile() {
           Switch to {viewMode === "table" ? "Grid" : "Table"} View
         </Button>
 
-        <Button onClick={() => router.push(`../login/reset/new-pass`)}>
+        <Button className="cursor-pointer" onClick={() => router.push(`../login/reset/new-pass`)}>
           Change password
         </Button>
 
-        <Button onClick={handleUpdate} disabled={updating} className="w-full">
+        <Button onClick={handleUpdate} disabled={updating} className="w-full cursor-pointer">
           {updating ? "Updating..." : "Update Profile"}
         </Button>
       </div>
