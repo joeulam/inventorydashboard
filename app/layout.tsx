@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Invy",
+  title: "Invery",
   description: "Inventory Tracking Application",
 };
 

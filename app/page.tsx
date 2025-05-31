@@ -43,7 +43,7 @@ export default function Home() {
         />
 
         <h1 className="text-5xl font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-          Welcome to <span className="text-blue-600">Invy</span>
+          Welcome to <span className="text-blue-600">Invery</span>
         </h1>
         <p className="mt-6 text-lg text-gray-600">
           Manage your inventory with ease. Track stock levels, visualize trends, and stay organized — all in one place.
@@ -72,7 +72,7 @@ export default function Home() {
       </motion.div>
 
       <footer className="mt-20 text-xs text-gray-400">
-        © {new Date().getFullYear()} Invy. All rights reserved.
+        © {new Date().getFullYear()} Invery. All rights reserved.
       </footer>
     </div>
   );

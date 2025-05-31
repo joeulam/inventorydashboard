@@ -44,9 +44,9 @@ export function SignupForm({
           <form className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-bold">Welcome to Invy</h1>
+                <h1 className="text-2xl font-bold">Welcome to Invery</h1>
                 <p className="text-balance text-muted-foreground">
-                  Create your Invy account
+                  Create your Invery account
                 </p>
               </div>
               <div className="grid gap-2">
