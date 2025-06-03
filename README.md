@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invery — Inventory Management Web App
 
-## Getting Started
+**Invery** is a modern inventory management system built for small businesses, personal projects, and startups. It supports real-time inventory tracking, custom categories, editable product listings, and order management.
 
-First, run the development server:
+##  Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-  **Inventory Dashboard**: View, search, and sort items by category, quantity, and date added.
+-  **Editable Items**: Update name, quantity, image, and custom fields via modal forms.
+-  **Search & Filter**: Quickly locate inventory with full-text search and dynamic filters.
+-  **Custom Categories**: Tag items with custom categories; auto-create new tags on entry.
+-  **Order Management**: Separate sections for current and completed orders.
+-  **Supabase Integration**: Real-time sync, secure authentication, and PostgreSQL backend.
+-  **ShadCN UI + Tailwind**: Clean, responsive, and component-based UI.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+##  Built With
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Next.js 15](https://nextjs.org/) – React framework for full-stack apps
+- [Supabase](https://supabase.com/) – Auth, Database, and Storage backend
+- [ShadCN UI](https://ui.shadcn.com/) – Styled component library with Tailwind
+- [TypeScript](https://www.typescriptlang.org/) – Type-safe code
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+##  Author
 
-To learn more about Next.js, take a look at the following resources:
+**Joey Lam**  
+Computer Science & Economics @ Boston University (Class of 2027)  
+Passionate about full-stack development, product design, and building tools that solve real-world problems.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Portfolio: [joeyresume.vercel.app/](https://joeyresume.vercel.app/)
+- LinkedIn: [linkedin.com/in/joey-lam-89057021b/](https://www.linkedin.com/in/joey-lam-89057021b/)
+- GitHub: [github.com/joeulam](https://github.com/joeulam)
